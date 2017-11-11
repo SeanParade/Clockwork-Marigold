@@ -1,29 +1,23 @@
 #!/usr/bin/env python3
-from sys import argv
 import bs4 as bs
 import requests
+from sys import argv
 
+__args = '+'.join(argv[1:])
 
-def get_images():
-  category_choice = ""
-  argv.reverse()
-  arg_qty = len(argv) - 2
-  
-  if arg_qty < 1:
-    category_choice = "computer" # default category
+def get_images(category):
+  if __args is not "":
+    category_choice = __args
   else:
-    while arg_qty >= 0:
-      category_choice += argv[arg_qty] + "+"
-      arg_qty = arg_qty - 1
-  
+    category_choice = category.replace(" ", "+")
+
   session = requests.session()
-  search = session.get('http://www.tumblr.com/search/' + category_choice[:-1])
+  search = session.get('http://www.tumblr.com/search/' + category_choice)
   soup = bs.BeautifulSoup(search.content, "lxml")
   images = []
 
   for image in soup.find_all('img'):
     src_url = image['src']
-
     rules = [ 'media.tumblr.com' in src_url,
               'avatar' not in src_url,
               'inline' not in src_url,]
@@ -34,6 +28,5 @@ def get_images():
   
   return images
 
-
-scraped_images = get_images()
+get_images("computer")
 
