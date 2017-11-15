@@ -12,3 +12,5 @@ name = "pypi"
 [packages]
 
 requests = "*"
+flask = "*"
+gunicorn = "*"
